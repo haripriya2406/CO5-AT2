@@ -1,0 +1,52 @@
+def is_safe(v, graph, path, pos):
+    if graph[path[pos - 1]][v] == 0:
+        return False
+
+    if v in path:
+        return False
+
+    return True
+
+def hamiltonian_util(graph, path, pos):
+    n = len(graph)
+
+    if pos == n:
+        return graph[path[pos - 1]][path[0]] == 1
+
+    for v in range(n):
+        if is_safe(v, graph, path, pos):
+            path[pos] = v
+
+            if hamiltonian_util(graph, path, pos + 1):
+                return True
+
+            path[pos] = -1
+
+    return False
+
+def hamiltonian_cycle(graph, start):
+    n = len(graph)
+
+    path = [-1] * n
+    path[0] = start
+
+    if not hamiltonian_util(graph, path, 1):
+        print("No Solution Exists")
+        return
+
+    print("Hamiltonian Cycle:")
+    for vertex in path:
+        print(vertex, end=" ")
+    print(start)
+
+graph = [
+    [0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 0],
+    [1, 1, 0, 1, 1],
+    [0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 0]
+]
+
+start_vertex = 0
+
+hamiltonian_cycle(graph, start_vertex)
