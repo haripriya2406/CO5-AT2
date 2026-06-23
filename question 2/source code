@@ -1,0 +1,62 @@
+def is_safe(v, graph, path, pos):
+    # Check if current vertex is adjacent to previous vertex
+    if graph[path[pos - 1]][v] == 0:
+        return False
+
+    # Check if vertex is already included in the path
+    if v in path:
+        return False
+
+    return True
+
+
+def hamiltonian_cycle_util(graph, path, pos):
+    n = len(graph)
+
+    # If all vertices are included
+    if pos == n:
+        # Check if last vertex connects to starting vertex
+        return graph[path[pos - 1]][path[0]] == 1
+
+    # Try different vertices
+    for v in range(n):
+        if is_safe(v, graph, path, pos):
+            path[pos] = v
+
+            if hamiltonian_cycle_util(graph, path, pos + 1):
+                return True
+
+            # Backtrack
+            path[pos] = -1
+
+    return False
+
+
+def hamiltonian_cycle(graph, start):
+    n = len(graph)
+
+    path = [-1] * n
+    path[0] = start
+
+    if not hamiltonian_cycle_util(graph, path, 1):
+        print("No Solution Exists")
+        return
+
+    print("Hamiltonian Cycle Found:")
+    for vertex in path:
+        print(vertex, end=" -> ")
+    print(start)
+
+
+# Example Graph
+graph = [
+    [0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 0],
+    [1, 1, 0, 1, 1],
+    [0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 0]
+]
+
+start_vertex = 0
+
+hamiltonian_cycle(graph, start_vertex)
